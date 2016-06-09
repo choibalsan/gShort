@@ -7,6 +7,8 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
+using Ninject.Http;
+using Ninject.Mvc;
 
 namespace Shortener
 {
@@ -17,7 +19,9 @@ namespace Shortener
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);            
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            NinjectContainer.RegisterModules(NinjectModules.Modules);
+            NinjectHttpContainer.RegisterModules(NinjectHttpModules.Modules);
         }
     }
 }
