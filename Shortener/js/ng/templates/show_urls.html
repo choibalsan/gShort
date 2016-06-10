@@ -1,0 +1,20 @@
+﻿<span class="label label-warning">{{formData.errorMessage}}</span>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="col-md-2">Короткая ссылка</th>
+            <th class="col-md-1">Время создания</th>
+            <th class="col-md-8">Полная ссылка</th>
+            <th class="col-md-1">Переходов</th>
+        </tr>
+    </thead>
+    <tbody ng-init="getUrls()">
+        <tr ng-repeat="url in urls">
+            <td class="col-md-2">{{url.Short}}</td>
+            <td class="col-md-1">{{url.Time | date:'MMM-dd HH:mm:ss'}}</td>
+            <td class="col-md-8">{{url.Full}}</td>
+            <td class="col-md-1">{{url.ClicksCount}}</td>
+        </tr>
+    </tbody>
+</table>

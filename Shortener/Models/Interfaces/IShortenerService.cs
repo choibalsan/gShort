@@ -13,6 +13,6 @@ namespace Shortener.Models.Interfaces
         IList<UrlViewModel> GetAll();
         ShortUrl Get(string shortUrl);
         ShortUrl ShortenUrl(string fullUrl);
-        void AddClick(string shortUrl);
+        void AddClick(int urlId, string ip);
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ninject;
+using Shortener.Models.Context.Models;
 
 namespace Shortener.Controllers
 {
@@ -17,10 +18,21 @@ namespace Shortener.Controllers
             this._service = service;
         }
 
-        // GET: Home
-        public ActionResult Index()
+        public ActionResult Index(string key)
         {
-            return View();
+            if (string.IsNullOrWhiteSpace(key))
+                return View();
+            else
+            {
+                ShortUrl url = _service.Get(key);
+                if (url != null)
+                {
+                    _service.AddClick(url.Id, Request.UserHostAddress);
+                    return new RedirectResult(url.Full, true);
+                }
+                else
+                    return View();
+            }
         }
     }
 }

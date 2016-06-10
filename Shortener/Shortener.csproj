@@ -127,6 +127,8 @@
     <Content Include="css\normalize.css" />
     <Content Include="css\normalize.min.css" />
     <Content Include="Global.asax" />
+    <Content Include="js\ng\templates\show_urls.html" />
+    <Content Include="js\ng\templates\add_url.html" />
     <Content Include="js\ng\app.js" />
     <Content Include="Web.config" />
   </ItemGroup>

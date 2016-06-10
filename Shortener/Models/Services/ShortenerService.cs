@@ -8,43 +8,29 @@ using Shortener.Models.Context;
 using Shortener.Models.Context.Models;
 using Shortener.Models.Interfaces;
 using Shortener.Models.ViewModels;
+using System.Text;
 
 namespace Shortener.Models.Services
 {
     public class ShortenerService : IShortenerService
     {
-        public ShortenerService() { }
-        private ShortenerContext context = new ShortenerContext();
-        private BaseRepository<ShortUrl> departmentRepository;
-        private BaseRepository<Click> courseRepository;
+        private static readonly string validCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        private ShortenerContext _context = new ShortenerContext();
+        private BaseRepository<ShortUrl> _shortUrlRepository;
+        private BaseRepository<Click> _clickRepository;
 
-        public BaseRepository<ShortUrl> DepartmentRepository
+        protected BaseRepository<ShortUrl> ShortUrlRepository
         {
-            get
-            {
-                if (this.departmentRepository == null)
-                {
-                    this.departmentRepository = new BaseRepository<ShortUrl>(context);
-                }
-                return departmentRepository;
-            }
+            get { return this._shortUrlRepository ?? (this._shortUrlRepository = new BaseRepository<ShortUrl>(_context)); }
+        }
+        protected BaseRepository<Click> ClickRepository
+        {
+            get { return this._clickRepository ?? (this._clickRepository = new BaseRepository<Click>(_context)); }
         }
 
-        public BaseRepository<Click> CourseRepository
+        protected void Save()
         {
-            get
-            {
-                if (this.courseRepository == null)
-                {
-                    this.courseRepository = new BaseRepository<Click>(context);
-                }
-                return courseRepository;
-            }
-        }
-
-        public void Save()
-        {
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private bool disposed = false;
@@ -55,7 +41,7 @@ namespace Shortener.Models.Services
             {
                 if (disposing)
                 {
-                    context.Dispose();
+                    _context.Dispose();
                 }
             }
             this.disposed = true;
@@ -66,25 +52,48 @@ namespace Shortener.Models.Services
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
+        private bool CheckIfKeyExist(string key)
+        {
+            return _context.ShortUrls.Any(u => u.Short == key);
+        }
+        private static string GetRandomString(int length = 6)
+        {
+            StringBuilder result = new StringBuilder();
+            Random rand = new Random();
+            while (0 < length--)
+                result.Append(validCharacters[rand.Next(validCharacters.Length)]);
+            return result.ToString();
+        }
+        #region IShortenerService
         public IList<UrlViewModel> GetAll()
         {
-            throw new NotImplementedException();
+            return ShortUrlRepository.Get()
+                .Select(u => new UrlViewModel(u, u.Clicks.Count)).ToList();
         }
 
         public ShortUrl Get(string shortUrl)
         {
-            throw new NotImplementedException();
+            return ShortUrlRepository.Get(u => u.Short.Equals(shortUrl, StringComparison.InvariantCulture)).FirstOrDefault();
         }
 
         public ShortUrl ShortenUrl(string fullUrl)
         {
-            throw new NotImplementedException();
+            ShortUrl newUrl = new ShortUrl() { Full = fullUrl, Time = DateTime.Now };
+            string keyString = GetRandomString();
+            while (CheckIfKeyExist(keyString))
+                keyString = GetRandomString();
+            newUrl.Short = keyString;
+            ShortUrlRepository.Insert(newUrl);
+            Save();
+            return newUrl;
         }
 
-        public void AddClick(string shortUrl)
+        public void AddClick(int urlId, string ip)
         {
-            throw new NotImplementedException();
+            ClickRepository.Insert(new Click() { ShortUrlId = urlId, Time = DateTime.Now, Ip = ip });
+            Save();
         }
+
+        #endregion
     }
 }

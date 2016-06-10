@@ -11,12 +11,20 @@ namespace Shortener
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            routes.MapRoute(
+                name: "ApiRoute",
+                url: "ShortLink/{action}/{key}",
+                defaults: new { controller = "ShortLink", action = "Get", key = UrlParameter.Optional }
+            );
+            routes.MapRoute(
+                name: "RedirectRoute",
+                url: "{key}",
+                defaults: new { controller = "Home", action = "Index", key = UrlParameter.Optional }
+            );
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                url: "{controller}/{action}/{key}",
+                defaults: new { controller = "Home", action = "Index", key = UrlParameter.Optional }
             );
         }
     }

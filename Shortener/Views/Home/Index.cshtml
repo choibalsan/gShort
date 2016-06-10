@@ -27,23 +27,24 @@
         <script>window.html5 || document.write('<script src="js/vendor/html5shiv.js"><\/script>')</script>
     <![endif]-->
 </head>
-<body>
+<body ng-app="shrtApp" ng-controller="shrtCtrl">
     <!--[if lt IE 8]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <div ng-app="">
-        <div ng-view></div>
+    <div>
+        <ul class="nav nav-tabs">
+            <li role="presentation" ng-class="{active: $route.current.activetab == 'AddUrl'}"><a href="#AddUrl"> Добавить ссылку </a></li>
+            <li role="presentation" ng-class="{active: $route.current.activetab == 'ShowUrls'}"><a href="#ShowUrls"> Список ссылок </a></li>
+        </ul>
     </div>
-    <footer>
-        <p>&copy; @DateTime.Now.Year - gazim's shortener</p>
-    </footer>
+    <div ng-view></div>
     <!-- Vendor: Javascripts -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.js"></script>
 
     <!-- Vendor: Angular, followed by our custom Javascripts -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.js"></script>
     <!-- Our Website Javascripts -->
     <script src="~/js/ng/app.js"></script>
 </body>

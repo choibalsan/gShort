@@ -8,6 +8,15 @@ namespace Shortener.Models.ViewModels
 {
     public class UrlViewModel
     {
+        public UrlViewModel() { }
+        public UrlViewModel(Context.Models.ShortUrl url, int count)
+        {
+            ShortUrlId = url.Id;
+            Full = url.Full;
+            Short = url.Short;
+            Time = url.Time;
+            ClicksCount = count;
+        }
         public int ShortUrlId { get; set; }
         public string Full { get; set; }
         public string Short { get; set; }

@@ -1,0 +1,6 @@
+﻿<div class="form-group">
+    <input type="text" ng-model="formData.userUrl"  class="form-control" placeholder="Полная ссылка"/>
+    <button ng-click="submitUrl()" class="btn btn-default">Укоротить</button>
+    <a href="{{formData.shortUrl}}" target="_blank">{{formData.shortUrl}}</a>
+</div>
+<span class="label label-warning">{{formData.errorMessage}}</span>

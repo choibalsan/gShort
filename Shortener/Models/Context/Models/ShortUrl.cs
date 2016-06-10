@@ -8,9 +8,11 @@ namespace Shortener.Models.Context.Models
 {
     public class ShortUrl
     {
-        public int ShortUrlId { get; set; }
+        public int Id { get; set; }
         public string Full { get; set; }
         public string Short { get; set; }
         public DateTime Time { get; set; }
+
+        public virtual ICollection<Click> Clicks { get; set; }
     }
 }
