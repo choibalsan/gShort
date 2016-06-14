@@ -9,12 +9,13 @@ using Shortener.Models.Context.Models;
 using Shortener.Models.Interfaces;
 using Shortener.Models.ViewModels;
 using System.Text;
+using Shortener.Models.Helpers;
+using Shortener.Models.Exceptions;
 
 namespace Shortener.Models.Services
 {
     public class ShortenerService : IShortenerService
     {
-        private static readonly string validCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         private ShortenerContext _context = new ShortenerContext();
         private BaseRepository<ShortUrl> _shortUrlRepository;
         private BaseRepository<Click> _clickRepository;
@@ -56,14 +57,6 @@ namespace Shortener.Models.Services
         {
             return _context.ShortUrls.Any(u => u.Short == key);
         }
-        private static string GetRandomString(int length = 6)
-        {
-            StringBuilder result = new StringBuilder();
-            Random rand = new Random();
-            while (0 < length--)
-                result.Append(validCharacters[rand.Next(validCharacters.Length)]);
-            return result.ToString();
-        }
         #region IShortenerService
         public IList<UrlViewModel> GetAll()
         {
@@ -78,10 +71,14 @@ namespace Shortener.Models.Services
 
         public ShortUrl ShortenUrl(string fullUrl)
         {
+            Uri myUri;
+            if (Uri.TryCreate(fullUrl, UriKind.RelativeOrAbsolute, out myUri))
+                throw new ShotrenerException("Invalid url!");
+
             ShortUrl newUrl = new ShortUrl() { Full = fullUrl, Time = DateTime.Now };
-            string keyString = GetRandomString();
+            string keyString = StringExtensions.GetRandomString();
             while (CheckIfKeyExist(keyString))
-                keyString = GetRandomString();
+                keyString = StringExtensions.GetRandomString();
             newUrl.Short = keyString;
             ShortUrlRepository.Insert(newUrl);
             Save();

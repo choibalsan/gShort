@@ -11,11 +11,8 @@ namespace Shortener
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            routes.MapRoute(
-                name: "ApiRoute",
-                url: "ShortLink/{action}/{key}",
-                defaults: new { controller = "ShortLink", action = "Get", key = UrlParameter.Optional }
-            );
+            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
             routes.MapRoute(
                 name: "RedirectRoute",
                 url: "{key}",
